@@ -308,6 +308,7 @@
           if (typeof (base1 = window.history).pushState === "function") {
             base1.pushState(model_state, displayHash, '#' + displayHash);
           }
+          window.scrollTo(0, 0);
           window.document.title = displayHash;
         }
       }

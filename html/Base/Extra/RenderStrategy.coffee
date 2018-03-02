@@ -191,6 +191,7 @@ class RenderStrategy$Base
 				window.history.replaceState? model_state, displayHash, '#'+displayHash
 			else if not @was_popped and history is true # action, create history item
 				window.history.pushState? model_state, displayHash, '#'+displayHash
+				window.scrollTo 0, 0
 				window.document.title= displayHash
 		@last_path= str_path
 		return
