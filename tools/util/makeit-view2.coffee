@@ -2,7 +2,11 @@
 #
 #window= {}
 _log= ->
-#_log= console.log
+_log2= ->
+_log= console.error
+_log= (s)-> process.stderr.write s + "\n"
+_log2= (s)-> process.stderr.write s + " "
+#_log2= (s,ss)-> process.stderr.write "\n"+ s+ " "+ JSON.stringify ss
 #window._log2= ->
 #window._log2= console.log
 
@@ -27,27 +31,26 @@ class MockLoadStrategy
 		results= fs.readFileSync nm
 		String results
 	layout: (nm) ->
-		_log "layout: #{nm}"
+		_log "Layout: " + nm
 		full_nm= @getLayoNm nm
 		out= E.Extra.ParseFile full_nm, @getFile full_nm
 		#_log out
-		out
 	page: (nm) ->
-		_log "page: #{nm}"
+		_log "Page: " + nm
 		full_nm= @getPageNm nm
 		out= E.Extra.ParseFile full_nm, @getFile full_nm
 		#_log out
-		out
 	part: (nm) ->
-		_log "part: #{nm}"
 		full_nm= @getPartNm nm
-		E.Extra.ParseFile full_nm, @getFile full_nm
+		out = E.Extra.ParseFile full_nm, @getFile full_nm
+		#_log out
 	readdir: (type) ->
 		f= 'MockLoadStrategy.readdir'
-		_log f, '>', type
+		#_log f, '>', type
 		path_part= type
-		_log f, '@path path_part', @path, path_part
+		#_log f, '@path path_part', @path, path_part
 		return [] if not fs.existsSync @path+ path_part
+		#_log @path + path_part
 		files= fs.readdirSync @path+ path_part
 		f[0] for f in (p.split '.' for p in files)
 
@@ -57,7 +60,7 @@ doObj= (obj) ->
 
 doIt= (dev_dir,pkg_nm) ->
 	f= 'doIt'
-	_log f, 'args', dev_dir, pkg_nm
+	#_log f, 'args', dev_dir, pkg_nm
 	out= 'E.view$'+ pkg_nm+ '={\n'
 	load= new MockLoadStrategy dev_dir, pkg_nm
 
