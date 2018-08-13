@@ -3152,6 +3152,7 @@ else if (typeof define === "function" && define.amd) define(function() {return m
       this.onPopState = bind(this.onPopState, this);
       this.handleEvent = bind(this.handleEvent, this);
       var baseDiv, modalDiv, s;
+      this.hash_prefix = '#!/';
       this.very_first = true;
       this.was_popped = false;
       this.was_modal = false;
@@ -3338,7 +3339,7 @@ else if (typeof define === "function" && define.amd) define(function() {return m
       if (event === true || !event.state) {
         if (this.was_popped || !this.very_first) {
           E.action('browser_rehash', {
-            hash: location.hash.substr(1)
+            hash: location.hash.substr(this.hash_prefix.length)
           });
           return;
         }
@@ -3346,7 +3347,7 @@ else if (typeof define === "function" && define.amd) define(function() {return m
       this.was_popped = true;
       if (this.very_first) {
         E.action('browser_hash', {
-          hash: location.hash.substr(1)
+          hash: location.hash.substr(this.hash_prefix.length)
         });
       } else {
         if (event.state) {
@@ -3355,7 +3356,7 @@ else if (typeof define === "function" && define.amd) define(function() {return m
         m.startComputation();
         m.endComputation();
         E.action('browser_navhash', {
-          hash: location.hash.substr(1)
+          hash: location.hash.substr(this.hash_prefix.length)
         });
       }
     };
@@ -3440,11 +3441,11 @@ else if (typeof define === "function" && define.amd) define(function() {return m
       if (window.location.protocol !== 'file:') {
         if (this.very_first || history === 'replace') {
           if (typeof (base = window.history).replaceState === "function") {
-            base.replaceState(model_state, displayHash, '#' + displayHash);
+            base.replaceState(model_state, displayHash, this.hash_prefix + displayHash);
           }
         } else if (!this.was_popped && history === true) {
           if (typeof (base1 = window.history).pushState === "function") {
-            base1.pushState(model_state, displayHash, '#' + displayHash);
+            base1.pushState(model_state, displayHash, this.hash_prefix + displayHash);
           }
           window.scrollTo(0, 0);
           window.document.title = displayHash;
